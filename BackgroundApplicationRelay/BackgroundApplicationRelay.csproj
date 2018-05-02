@@ -103,6 +103,7 @@
     <Compile Include="PlantyIO\PlantyWatcher.cs" />
     <Compile Include="PumpIo.cs" />
     <Compile Include="SleepModule.cs" />
+    <Compile Include="SnapshotMod.cs" />
     <Compile Include="StartupTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -36,5 +36,9 @@
     <uap:Capability Name="removableStorage" />
     <uap3:Capability Name="remoteSystem" />
     <iot:Capability Name="systemManagement" />
+    <uap:Capability Name="picturesLibrary" />
+    <uap:Capability Name="videosLibrary" />
+    <DeviceCapability Name="microphone" />
+    <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>

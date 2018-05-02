@@ -17,7 +17,7 @@ namespace BackgroundApplicationRelay
     public sealed class StartupTask : IBackgroundTask
     {
         BackgroundTaskDeferral _deferral;
-        private ThreadPoolTimer timer;
+        private ThreadPoolTimer timer,snapshottimer;
         bool isOn = false;
        // int gpioPin = 4;
        // GpioController controll;
@@ -31,6 +31,7 @@ namespace BackgroundApplicationRelay
         TimeSpan duration = TimeSpan.FromSeconds(5);
         PumpIO io = new PumpIO();
         LedBlink ledblb = new LedBlink();
+        SnapshotMod snapmod;
         InitializeBoard boardInitializer = new InitializeBoard();
 
         /*
@@ -54,7 +55,8 @@ namespace BackgroundApplicationRelay
             // described in http://aka.ms/backgroundtaskdeferral
             //
             _deferral = taskInstance.GetDeferral();
-
+            //snapmod = new SnapshotMod();
+           // snapmod.TakePic();
             startime = DateTime.Today.AddMinutes(50);
 
             //=28800 +1800
@@ -67,10 +69,17 @@ namespace BackgroundApplicationRelay
            // restart = new PlantySlot(TimeSpan.FromMinutes(4), DateTime.Now.Add(TimeSpan.FromSeconds(50)).Subtract(DateTime.Now.Date), new SleepModule());
            // (eng.WatcherList as List<PlantySlot>).Add(restart);
             this.timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromMinutes(2));
-           // this.timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromSeconds(10));
+
+            //Snapshot timer uncomment to enable and flip the bool variable
+            //snapshottimer= ThreadPoolTimer.CreatePeriodicTimer(TakeSnapshot, TimeSpan.FromMinutes(5));
+
+            // this.timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromSeconds(10));
         }
 
-       
+        private void TakeSnapshot(ThreadPoolTimer timer)
+        {
+            snapmod.TakePic();
+        }
 
         private async  void Timer_Tick(ThreadPoolTimer timer)
         {
