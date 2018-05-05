@@ -74,18 +74,16 @@ namespace BackgroundApplicationRelay
             {
                 try
                 {
+                    ///Dont wanna create a landslide! hence awaitied some time for water to settle 
                     await InitializeBoard.Initialize();
-                    Initialize();
-                    await ioF.writeTOFileAs("started pump");
-                    pin.Write(GpioPinValue.High);
-                    isOn = true;
-                    await Task.Delay(TimeSpan.FromSeconds(6));
-                    Close();
+                    await StartPumpFor(TimeSpan.FromSeconds(6));
                     await Task.Delay(TimeSpan.FromSeconds(2));
-                    Initialize();
-                    pin.Write(GpioPinValue.High);
-                    await Task.Delay(TimeSpan.FromSeconds(7));
-                    Close();
+                    await StartPumpFor(TimeSpan.FromSeconds(6));
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    await StartPumpFor(TimeSpan.FromSeconds(5));
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    await StartPumpFor(TimeSpan.FromSeconds(4));
+
                     InitializeBoard.Close();
 
                 }
@@ -96,6 +94,16 @@ namespace BackgroundApplicationRelay
                 }
             }
 
+        }
+
+        private async Task StartPumpFor(TimeSpan t)
+        {
+            Initialize();
+            await ioF.writeTOFileAs("started pump");
+            pin.Write(GpioPinValue.High);
+            isOn = true;
+            await Task.Delay(t);
+            Close();
         }
 
         public IAsyncAction StartTask()
@@ -121,6 +129,35 @@ namespace BackgroundApplicationRelay
 
                 //}
             }
+        }
+        private async Task PumpTest()
+        {
+            if (modulePwr)
+            {
+                try
+                {
+                    await InitializeBoard.Initialize();
+                    await StartPumpFor(TimeSpan.FromSeconds(2));
+
+
+                    InitializeBoard.Close();
+
+
+
+
+                }
+                catch (Exception ex)
+                {
+
+                    ioF.writeTOFileAs(ex.StackTrace);
+                }
+            }
+        }
+
+        public  IAsyncAction TestModule()
+        {
+            return Task.Run(PumpTest).AsAsyncAction();
+            
         }
     }
 }

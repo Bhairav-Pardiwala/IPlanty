@@ -94,5 +94,10 @@ namespace BackgroundApplicationRelay
             }
 
         }
+
+        public IAsyncAction TestModule()
+        {
+            throw new NotImplementedException();
+        }
     }
     }

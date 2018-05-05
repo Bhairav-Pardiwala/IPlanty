@@ -70,6 +70,19 @@ namespace BackgroundApplicationRelay
         {
             return Task.Run(BlinkLed).AsAsyncAction();
         }
+        public async void TestModule()
+        {
+            if(modulePwr)
+            {
+                Initialize();
+                pin.Write(GpioPinValue.High);
+
+                await Task.Delay(TimeSpan.FromSeconds(5));
+                pin.Write(GpioPinValue.Low);
+                Close();
+            }
+          
+        }
         private async Task BlinkLed()
         {
             if (modulePwr)

@@ -42,6 +42,11 @@ namespace BackgroundApplicationRelay.PlantyIOT
             this.toStart = tostart;
             PlantyIO = p;
         }
+        public  IAsyncAction TestModule()
+        {
+            return plantyIO.TestModule();
+        }
+      
 
         //public void setStartTime(DateTime dt)
         //{

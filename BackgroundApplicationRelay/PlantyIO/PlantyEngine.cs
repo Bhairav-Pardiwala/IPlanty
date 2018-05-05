@@ -22,15 +22,35 @@ namespace BackgroundApplicationRelay.PlantyIOT
         public bool IsComplete { get => isComplete; set => isComplete = value; }
 
         private bool isComplete = true;
+        private bool allModulesTested = false;
+        private bool testinProgress = false;
 
         public PlantyEngine()
         {
             WatcherList = new List<PlantySlot>();
         }
+        public async void Initialize()
+        {
+            if(!testinProgress)
+            {
+                testinProgress = true;
+                foreach (var item in watcherList)
+                {
+                    await item.TestModule();
+                }
+                allModulesTested = true;
+            }
+           
+            testinProgress = false;
+        }
 
         public void tick()
         {
-
+            if(!allModulesTested)
+            {
+                Initialize();
+                return;
+            }
             ////start first item and quit if first item task has completed start second item 
             //if last item then go back to first item 
             if (WatcherList.Count() > 0)

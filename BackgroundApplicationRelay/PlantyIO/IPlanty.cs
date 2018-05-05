@@ -11,5 +11,6 @@ namespace BackgroundApplicationRelay.PlantyIOT
     {
         IAsyncAction StartTask();
         IAsyncAction EndTask();
+        IAsyncAction TestModule();
     }
 }

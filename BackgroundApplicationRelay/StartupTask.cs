@@ -74,12 +74,15 @@ namespace BackgroundApplicationRelay
             //snapshottimer= ThreadPoolTimer.CreatePeriodicTimer(TakeSnapshot, TimeSpan.FromMinutes(5));
 
             // this.timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromSeconds(10));
+            ledblb.TestModule();
+            eng.Initialize();
         }
 
         private void TakeSnapshot(ThreadPoolTimer timer)
         {
             snapmod.TakePic();
         }
+        
 
         private async  void Timer_Tick(ThreadPoolTimer timer)
         {
