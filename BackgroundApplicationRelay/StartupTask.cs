@@ -17,7 +17,7 @@ namespace BackgroundApplicationRelay
     public sealed class StartupTask : IBackgroundTask
     {
         BackgroundTaskDeferral _deferral;
-        private ThreadPoolTimer timer,snapshottimer;
+        private ThreadPoolTimer timer,snapshottimer,mqttTimer;
         bool isOn = false;
        // int gpioPin = 4;
        // GpioController controll;
@@ -30,10 +30,13 @@ namespace BackgroundApplicationRelay
 
         TimeSpan duration = TimeSpan.FromSeconds(5);
         PumpIO io = new PumpIO();
-        LedBlink ledblb = new LedBlink();
+          LedBlink ledblb = new LedBlink();
         SnapshotMod snapmod;
         InitializeBoard boardInitializer = new InitializeBoard();
 
+       // BlueTServer BluetoothServ;
+
+        M2MQTTMod mqttmodd = new M2MQTTMod();
         /*
         *  public IAsyncOperation<string> GetUriContentAsync(string uri)
    {
@@ -42,8 +45,19 @@ namespace BackgroundApplicationRelay
 
         */
 
+            public LedBlink getLedBulb()
+        {
+            return ledblb;
+        }
+        public PumpIO getPmp()
+        {
+            return io;
+        }
+
         public void Run(IBackgroundTaskInstance taskInstance)
         {
+            //DateTimeOffset local = DateTime.SpecifyKind(new DateTime(2018, 5, 18, 0, 21, 0), DateTimeKind.Local);
+            //Windows.System.DateTimeSettings.SetSystemDateTime(local);
            // controll = GpioController.GetDefault();
            // pin = controll.OpenPin(gpioPin);
            // pin.SetDriveMode(GpioPinDriveMode.Output);
@@ -70,12 +84,27 @@ namespace BackgroundApplicationRelay
            // (eng.WatcherList as List<PlantySlot>).Add(restart);
             this.timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromMinutes(2));
 
+          
+
             //Snapshot timer uncomment to enable and flip the bool variable
             //snapshottimer= ThreadPoolTimer.CreatePeriodicTimer(TakeSnapshot, TimeSpan.FromMinutes(5));
 
             // this.timer = ThreadPoolTimer.CreatePeriodicTimer(Timer_Tick, TimeSpan.FromSeconds(10));
             ledblb.TestModule();
+            //BluetoothServ = new BlueTServer();
             eng.Initialize();
+            mqttmodd.init(this);
+
+            mqttTimer = ThreadPoolTimer.CreatePeriodicTimer(MQTTTick, TimeSpan.FromMinutes(2));
+
+        }
+
+        private void MQTTTick(ThreadPoolTimer timer)
+        {
+           if(!mqttmodd.isConnected())
+            {
+                mqttmodd.reset();
+            }
         }
 
         private void TakeSnapshot(ThreadPoolTimer timer)
@@ -86,8 +115,8 @@ namespace BackgroundApplicationRelay
 
         private async  void Timer_Tick(ThreadPoolTimer timer)
         {
-          // await  io.StartTask();
-          
+            // await  io.StartTask();
+             //BluetoothServ.Start();
            await ledblb.Blink();
             eng.tick();
             //if(startime.Value<startime.Value)

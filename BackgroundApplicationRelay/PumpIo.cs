@@ -77,14 +77,12 @@ namespace BackgroundApplicationRelay
                     ///Dont wanna create a landslide! hence awaitied some time for water to settle 
                     await InitializeBoard.Initialize();
                     await StartPumpFor(TimeSpan.FromSeconds(6));
-                    await Task.Delay(TimeSpan.FromSeconds(2));
-                    await StartPumpFor(TimeSpan.FromSeconds(6));
-                    await Task.Delay(TimeSpan.FromSeconds(3));
-                    await StartPumpFor(TimeSpan.FromSeconds(5));
+                   // InitializeBoard.Close();
                     await Task.Delay(TimeSpan.FromSeconds(5));
-                    await StartPumpFor(TimeSpan.FromSeconds(4));
-
+                    //await InitializeBoard.Initialize();
+                    await StartPumpFor(TimeSpan.FromSeconds(20));
                     InitializeBoard.Close();
+
 
                 }
                 catch (Exception ex)
@@ -111,6 +109,26 @@ namespace BackgroundApplicationRelay
 
             return Task.Run(StartPump).AsAsyncAction();
         }
+
+        public IAsyncAction  ManualStartPump()
+        {
+           
+            return Task.Run(ManualStart).AsAsyncAction();
+        }
+        public void ManulStopPump()
+        {
+            InitializeBoard.Close();
+            Close();
+        }
+        private async Task ManualStart()
+        {
+            await InitializeBoard.Initialize();
+            Initialize();
+            await ioF.writeTOFileAs("started pump");
+            pin.Write(GpioPinValue.High);
+            isOn = true;
+        }
+        
 
         private async Task StopPump()
         {

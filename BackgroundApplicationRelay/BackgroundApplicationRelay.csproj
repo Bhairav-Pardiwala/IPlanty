@@ -95,9 +95,12 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BlueTServer.cs" />
+    <Compile Include="CommunicationMessage.cs" />
     <Compile Include="FileIO.cs" />
     <Compile Include="InitializeBoard.cs" />
     <Compile Include="LedBlink.cs" />
+    <Compile Include="M2MQTTClass.cs" />
     <Compile Include="PlantyIO\IPlanty.cs" />
     <Compile Include="PlantyIO\PlantyEngine.cs" />
     <Compile Include="PlantyIO\PlantyWatcher.cs" />
@@ -138,8 +141,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="M2Mqtt">
+      <Version>4.3.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.8</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
